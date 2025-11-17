@@ -16,6 +16,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Trigger Amplify Webhook
-        run: curl -X POST -d {} "$AMPLIFY_WEBHOOK_URL"
-        env:
-          AMPLIFOY_WEBHOOK_URL: ${{ secrets.AMPLIFY_WEBHOOK_URL }}
+        run: curl -X POST -d {} "${{ secrets.AMPLIFY_WEBHOOK_URL }}"
