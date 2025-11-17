@@ -1,0 +1,32 @@
+version: ‘3.8’
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: on-failure:10
+    ports:
+      - “8082:8082”
+    environment:
+    # docker-compose 안에 프론트랑 백이 다 있어서  프론트의 db안에 있는 mydb로 가능
+    # docker-compose로 네트워크를 결합하였기 때문에 mydb라는 서비스명으로 host호출 가능
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mydb:3306/catsys
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+    volumes:
+      - image-path:/tmp
+    depends_on:
+      - mydb
+  frontend:
+    build:
+        context: ./frontend
+        dockerfile: Dockerfile
+    ports:
+      - “8081:80"
+  mydb:
+    image: mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234
+      - MARIADB_DATABASE=catsys
+volumes:
+  image-path:

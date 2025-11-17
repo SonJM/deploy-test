@@ -1,0 +1,4 @@
+2025-11-17 14:09:45.487 [main] INFO  kr.co.sonjm.demo.DemoApplication - Starting DemoApplication using Java 17.0.10 with PID 25060 (C:\Users\sonjm\IdeaProjects\demo2\backend\build\classes\java\main started by sonjm in C:\Users\sonjm\IdeaProjects\demo2\backend)
+2025-11-17 14:09:45.511 [main] DEBUG kr.co.sonjm.demo.DemoApplication - Running with Spring Boot v3.5.7, Spring v6.2.12
+2025-11-17 14:09:45.513 [main] INFO  kr.co.sonjm.demo.DemoApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-17 14:09:51.355 [main] INFO  kr.co.sonjm.demo.DemoApplication - Started DemoApplication in 6.796 seconds (process running for 10.484)
