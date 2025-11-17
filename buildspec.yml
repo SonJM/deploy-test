@@ -1,0 +1,47 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+      docker: 20
+  pre_build:
+    commands:
+      # ECR Login
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      # Get the list of changed files from the last commit
+      - export GIT_CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD)
+      - echo "Changed files: $GIT_CHANGED_FILES"
+  build:
+    commands:
+      # Backend build and push, if backend files changed
+      - |
+        if echo "$GIT_CHANGED_FILES" | grep -q "backend/"; then
+          echo "Backend changes detected. Building and pushing Docker image..."
+          cd backend
+          ./gradlew build -x test
+          docker build -t $ECR_REPOSITORY_URI:latest .
+          docker tag $ECR_REPOSITORY_URI:latest $ECR_REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
+          docker push $ECR_REPOSITORY_URI --all-tags
+          cd ..
+        else
+          echo "No changes in backend. Skipping build."
+        fi
+      # Frontend build, if frontend files changed
+      # Note: Amplify deployment is triggered by a webhook on push.
+      # This section just verifies the build. The actual deployment is handled by Amplify.
+      - |
+        if echo "$GIT_CHANGED_FILES" | grep -q "frontend/"; then
+          echo "Frontend changes detected. Running build to verify..."
+          cd frontend
+          npm install
+          npm run build
+          cd ..
+          echo "Frontend build successful. Amplify will handle the deployment."
+        else
+          echo "No changes in frontend. Skipping build."
+        fi
+
+artifacts:
+  files: [] # No artifacts needed as backend is pushed to ECR and frontend is handled by Amplify

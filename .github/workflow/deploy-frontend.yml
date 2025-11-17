@@ -1,0 +1,23 @@
+name: Deploy Frontend to Amplify
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Amplify
+        # (예시) Amplify 배포를 위한 스크립트나 Webhook 호출 실행
+        # Amplify가 GitHub 레포에 연결되어 있다면, 
+        # main 브랜치의 'frontend/' 경로만 바라보도록 설정할 수도 있습니다.
+        # 혹은 여기서 Amplify CLI를 실행하거나 빌드 훅을 호출합니다.
+        run: echo "Frontend-only deployment triggered..."
